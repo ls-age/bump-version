@@ -1,0 +1,37 @@
+{
+  "name": "@ls-age/bump-version",
+  "version": "0.1.0",
+  "description": "",
+  "main": "out/index.js",
+  "scripts": {
+    "compile": "babel -d out src",
+    "lint": "eslint src test",
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ls-age/bump-version.git"
+  },
+  "author": "Lukas Hechenberger <npm@ls-age.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ls-age/bump-version/issues"
+  },
+  "homepage": "https://github.com/ls-age/bump-version#readme",
+  "dependencies": {
+    "conventional-recommended-bump": "^1.0.3",
+    "yargs": "^10.0.3"
+  },
+  "devDependencies": {
+    "@ls-age/babel-preset": "^0.3.0",
+    "@ls-age/eslint-config": "^0.5.0",
+    "babel-cli": "^6.26.0",
+    "eslint": "^4.11.0"
+  },
+  "eslintConfig": {
+    "extends": "@ls-age"
+  },
+  "babel": {
+    "presets": ["@ls-age/babel-preset"]
+  }
+}
