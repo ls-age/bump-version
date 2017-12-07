@@ -7,7 +7,7 @@ export default function loadPackage({ cwd }) {
   return readJson(join(cwd || process.cwd(), 'package.json'));
 }
 
-export function repo(pkg) {
+export function getRepo(pkg) {
   if (!pkg.repository) {
     return null;
   }

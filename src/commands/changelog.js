@@ -1,19 +1,17 @@
-import { join } from 'path';
 import { Command } from '@ls-age/expose';
 import createWriter from 'conventional-changelog-writer';
 import angular from 'conventional-changelog-angular';
 import toPromise from 'stream-to-promise';
 import dateFormat from 'dateformat';
-import { readJson } from 'fs-extra';
-import packageRepo from '../lib/package';
-import { runTags, tagOptions } from './tags';
+import loadPackage, { getRepo } from '../lib/package';
+import { fetchOption, getFilteredTags } from './tags';
 import { getMessages } from './messages';
 
 export async function createChangelog(options) {
   const [{ writerOpts }, tags, pkg] = await Promise.all([
     angular,
-    runTags(Object.assign(options, { filter: 'non-prerelease' })),
-    readJson(join(options.cwd || process.cwd(), 'package.json')),
+    getFilteredTags(Object.assign(options, { filter: 'non-prerelease' })),
+    loadPackage(options),
   ]);
 
   const msgOptions = [...tags, null].map((tag, i) => {
@@ -34,7 +32,7 @@ export async function createChangelog(options) {
       .then(messages => ({ messages, version, date })))
   );
 
-  const { host, user, repo, https_url } = packageRepo(pkg);
+  const { host, user, repo, https_url } = getRepo(pkg);
 
   const writerContext = {
     host: `https://${host}`,
@@ -69,8 +67,7 @@ export default new Command({
   name: 'changelog',
   description: 'Create changelog',
   run: ({ options }) => createChangelog(options),
-
   options: [
-    ...tagOptions.filter(o => o.name !== 'filter'),
+    fetchOption,
   ],
 });

@@ -15,18 +15,19 @@ export const tagOptions = [
   }),
 ];
 
+export async function getFilteredTags(options) {
+  if (options.fetch) {
+    await fetchTags();
+  }
+
+  const tags = await getTags(options);
+
+  return filterTags(tags, options.filter);
+}
+
 export default new Command({
   name: 'tags',
   description: 'List tags',
-  async run({ options }) {
-    if (options.fetch) {
-      await fetchTags();
-    }
-
-    const tags = await getTags(options);
-
-    return filterTags(tags, options.filter);
-  },
-
+  run: ({ options }) => getFilteredTags(options),
   options: tagOptions,
 });
