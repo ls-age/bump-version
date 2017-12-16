@@ -37,7 +37,7 @@ export async function recommendBump(options) {
     })
     .reduce((a, b) => Math.min(a, b), false);
 
-  const incType = `${options.prerelease ? 'pre' : ''}${VersionTypes[level]}`;
+  const incType = `${options.prerelease ? 'pre' : ''}${VersionTypes[level || 2]}`;
   const incArgs = [incType].concat(options.prerelease || undefined);
 
   const result = {
