@@ -62,7 +62,10 @@ export async function createRelease(options) {
 
   await outputFile(
     join(options.cwd || process.cwd(), 'CHANGELOG.md'),
-    await createChangelog(options)
+    await createChangelog(Object.assign({}, {
+      tags: nonPrereleaseTags,
+      pkg,
+    }))
   );
 
   await addAndCommit(Object.assign({}, options, {
