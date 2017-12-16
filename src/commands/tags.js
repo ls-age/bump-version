@@ -17,12 +17,12 @@ export const tagOptions = [
 
 export async function getFilteredTags(options) {
   if (options.fetch) {
-    await fetchTags();
+    await fetchTags(options);
   }
 
   const tags = await getTags(options);
 
-  return filterTags(tags, options.filter);
+  return filterTags(tags, options.filter || false);
 }
 
 export default new Command({
