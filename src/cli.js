@@ -55,7 +55,7 @@ cli.addOptions([
     },
   }),
   new BooleanOption({
-    name: 'status-code',
+    name: 'exit-code',
     description: 'Set status code for results',
     set(statusCode) {
       printingOptions.statusCode = statusCode;
