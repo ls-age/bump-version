@@ -11,9 +11,7 @@ export function fetchTags({ cwd }) {
 }
 
 export function getTags({ cwd }) {
-  return run('git', ['tag', '--list',
-    '--format={ "date": "%(creatordate)", "name": "%(refname:short)" }',
-  ], { cwd })
+  return run('git', ['for-each-ref', '--sort', 'creatordate', '--format', '{ "name": "%(refname:short)", "date": "%(creatordate)" }', 'refs/tags'], { cwd })
     .then(({ stdout }) => stdout.split('\n').filter(l => l.length)
       .map(JSON.parse)
       .reverse()
