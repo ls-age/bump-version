@@ -1,12 +1,10 @@
+import { valid as validSemver, prerelease as isPrerelease } from 'semver';
 import run from '../run';
 
 // eslint-disable-next-line import/prefer-default-export
 export function createTag({ prefix = '', version, message, cwd }) {
   return run('git', ['tag', '-a', `${prefix}${version}`, '-m', message], { cwd });
 }
-
-import { valid as validSemver, prerelease as isPrerelease } from 'semver';
-import run from './run';
 
 export function fetchTags({ cwd }) {
   return run('git', ['fetch', '--tags'], { cwd });
