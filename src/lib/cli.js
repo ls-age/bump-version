@@ -2,7 +2,7 @@ import { isAbsolute, join } from 'path';
 import { outputFile } from 'fs-extra';
 
 export function printResult(result, options) {
-  if (!result) { return undefined; }
+  if (result === undefined) { return undefined; }
   if (result instanceof Array && options.limit) {
     return printResult(
       result.slice(0, options.limit),
