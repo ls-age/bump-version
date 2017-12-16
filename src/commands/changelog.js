@@ -19,8 +19,6 @@ export async function createChangelog(options) {
   const msgOptions = [...tags, null].map((tag, i) => {
     const last = tags[i - 1];
 
-    console.log('>>>> ', last, tag);
-
     return {
       from: tag && tag.name,
       until: last ? last.name : 'HEAD',
