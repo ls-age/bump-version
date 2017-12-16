@@ -4,6 +4,7 @@ import { isAbsolute, join } from 'path';
 import Expose, { BooleanOption, StringOption, NumberOption } from '@ls-age/expose';
 import { bin, description, version } from '../package.json';
 import { printResult, handleError } from './lib/cli';
+import releaseCommand from './commands/release';
 import changelogCommand from './commands/changelog';
 import messagesCommand from './commands/messages';
 import tagsCommand from './commands/tags';
@@ -81,6 +82,7 @@ cli.addVersion(version);
 
 // Commands
 
+cli.addCommand(releaseCommand);
 cli.addCommand(changelogCommand);
 cli.addCommand(messagesCommand);
 cli.addCommand(tagsCommand);
