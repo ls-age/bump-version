@@ -47,5 +47,9 @@ jobs:
       - deploy:
           name: Deploy changes
           command: |
+            if [ node out/cli.js on-release-branch --status-code ]; then
+              echo "On release branch"
+            fi
+
             echo "Not implemented yet"
             exit 0
