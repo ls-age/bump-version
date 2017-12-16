@@ -1,9 +1,11 @@
 import { join } from 'path';
-import { Command, BooleanOption } from '@ls-age/expose';
+import { Command, BooleanOption, StringOption } from '@ls-age/expose';
 import { outputFile } from 'fs-extra';
 import loadPackage from '../lib/package';
 import bumpVersion from '../lib/version';
 import isClean from '../lib/git/status';
+import addAndCommit from '../lib/git/commit';
+import push from '../lib/git/push';
 import { onReleaseBranch } from './on-release-branch';
 import { getFilteredTags } from './tags';
 import { recommendBump } from './recommend-bump';
@@ -48,6 +50,8 @@ export async function createRelease(options) {
   addAndCommit(Object.assign({}, options, {
     message: `chore(release): Release ${bump.version} [ci skip]`,
   }));
+
+  push(options);
 }
 
 export default new Command({
@@ -58,6 +62,10 @@ export default new Command({
     new BooleanOption({
       name: 'first',
       description: 'Do not increment version number',
+    }),
+    new StringOption({
+      name: 'remote',
+      description: 'The git remote to push to',
     }),
   ],
 });
