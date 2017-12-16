@@ -1,5 +1,5 @@
-<a name="0.1.1-beta.1"></a>
-## 0.1.1-beta.1 (2017-12-16)
+<a name="0.2.0-beta.0"></a>
+# 0.2.0-beta.0 (2017-12-16)
 
 
 ### Bug Fixes
@@ -13,6 +13,7 @@
 ### Features
 
 * Add base functionality ([#1](https://github.com/ls-age/bump-version/issues/1)) ([273399d](https://github.com/ls-age/bump-version/commits/273399d))
+* **release:** Create GitHub releases ([1d3ad69](https://github.com/ls-age/bump-version/commits/1d3ad69))
 
 
 
