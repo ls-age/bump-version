@@ -3,8 +3,12 @@ import { readJson } from 'fs-extra';
 import github from 'github-url-to-object';
 import bitbucket from 'bitbucket-url-to-object';
 
-export default function loadPackage({ cwd }) {
-  return readJson(join(cwd || process.cwd(), 'package.json'));
+export function packagePath({ cwd }) {
+  return join(cwd || process.cwd(), 'package.json');
+}
+
+export default function loadPackage(options) {
+  return readJson(packagePath(options));
 }
 
 export function getRepo(pkg) {
