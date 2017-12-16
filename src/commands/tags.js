@@ -20,7 +20,7 @@ export async function getFilteredTags(options) {
     await fetchTags(options);
   }
 
-  const tags = await getTags(options);
+  const tags = options.tags || await getTags(options);
 
   return filterTags(tags, options.filter || false);
 }
