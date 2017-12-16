@@ -33,17 +33,26 @@ export async function recommendBump(options) {
         return 0;
       }
 
-      return type === 'feat' ? 1 : 2;
-    })
-    .reduce((a, b) => Math.min(a, b), false);
+      if (type === 'feat') {
+        return 1;
+      }
 
-  const incType = `${options.prerelease ? 'pre' : ''}${VersionTypes[level || 2]}`;
+      if (type === 'fix') {
+        return 2;
+      }
+
+      return 3;
+    })
+    .reduce((a, b) => Math.min(a, b), 3);
+
+  const levelIfNeeded = Math.min(level, 2);
+  const incType = `${options.prerelease ? 'pre' : ''}${VersionTypes[levelIfNeeded]}`;
   const incArgs = [incType].concat(options.prerelease || undefined);
 
   const result = {
-    type: VersionTypes[level || 2],
+    type: VersionTypes[levelIfNeeded],
     version: increment(pkg.version, ...incArgs),
-    needed: level !== false,
+    needed: level !== 3,
   };
 
   if (options.only) {
