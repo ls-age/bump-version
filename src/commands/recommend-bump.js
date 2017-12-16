@@ -15,7 +15,7 @@ export async function recommendBump(options) {
 
   let latestTag = options.latestTag || (Array.isArray(options.tags) && options.tags[0]);
 
-  if (!latestTag) {
+  if (latestTag === undefined) {
     const tags = await getFilteredTags(Object.assign({
       fetch: true,
     }, options));
@@ -35,7 +35,7 @@ export async function recommendBump(options) {
 
       return type === 'feat' ? 1 : 2;
     })
-    .reduce((a, b) => Math.min(a, b), 2);
+    .reduce((a, b) => Math.min(a, b), false);
 
   const incType = `${options.prerelease ? 'pre' : ''}${VersionTypes[level]}`;
   const incArgs = [incType].concat(options.prerelease || undefined);
@@ -43,6 +43,7 @@ export async function recommendBump(options) {
   const result = {
     type: VersionTypes[level || 2],
     version: increment(pkg.version, ...incArgs),
+    needed: level !== false,
   };
 
   if (options.only) {
