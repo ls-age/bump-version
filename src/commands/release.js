@@ -107,7 +107,7 @@ export async function createRelease(options) {
   }));
 
   const { user, repo } = getRepo(pkg);
-  await github.createRelease({
+  await github.repos.createRelease({
     owner: user,
     repo,
     tag_name: `${tagPrefix}${bump.version}`,
