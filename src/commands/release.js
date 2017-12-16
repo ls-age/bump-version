@@ -70,6 +70,8 @@ export async function createRelease(options) {
     version: bump.version,
     message: `chore(release): Add ${bump.version} release tag [ci skip]`,
   });
+
+  return bump.version;
 }
 
 export default new Command({
