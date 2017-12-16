@@ -62,7 +62,7 @@ export default new Command({
     }),
     new BooleanOption({
       name: 'type',
-      description: 'Retrurn type only',
+      description: 'Return type only',
     }),
   ],
 });
