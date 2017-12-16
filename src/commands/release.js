@@ -70,6 +70,10 @@ export async function createRelease(options) {
     version: bump.version,
     message: `chore(release): Add ${bump.version} release tag [ci skip]`,
   });
+  await push(Object.assign({}, options, {
+    branch: tagBranch,
+    tags: true,
+  }));
 
   return bump.version;
 }
