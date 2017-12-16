@@ -56,6 +56,8 @@ export async function createRelease(options) {
   }));
 
   push(options);
+
+  await checkout(Object.assign({}, options, { branch: `release-${bump.version}`, create: true }));
 }
 
 export default new Command({
