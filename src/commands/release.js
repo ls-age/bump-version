@@ -56,8 +56,18 @@ export async function createRelease(options) {
   }));
   await push(options);
 
-
+  // Create release tag
   await checkout(Object.assign({}, options, { branch: `release-${bump.version}`, create: true }));
+  await addAndCommit(Object.assign({}, options, {
+    force: true,
+    files: ['out'], // FIXME: Take from config
+    message: `chore(release): Add ${bump.version} release files [ci skip]`,
+  }));
+  await createTag({
+    prefix: 'v', // FIXME: Tag from config
+    version: bump.version,
+    message: `chore(release): Add ${bump.version} release tag [ci skip]`,
+  });
 }
 
 export default new Command({
