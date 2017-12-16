@@ -51,11 +51,11 @@ export async function createRelease(options) {
     await createChangelog(options)
   );
 
-  addAndCommit(Object.assign({}, options, {
+  await addAndCommit(Object.assign({}, options, {
     message: `chore(release): Release ${bump.version} [ci skip]`,
   }));
+  await push(options);
 
-  push(options);
 
   await checkout(Object.assign({}, options, { branch: `release-${bump.version}`, create: true }));
 }
