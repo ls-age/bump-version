@@ -6,7 +6,7 @@ import bumpVersion from '../lib/version';
 import isClean from '../lib/git/status';
 import loggedIn from '../lib/npm/auth';
 import addAndCommit from '../lib/git/commit';
-import { checkout } from '../lib/git/branch';
+import { checkout, currentBranch } from '../lib/git/branch';
 import { createTag } from '../lib/git/tag';
 import push from '../lib/git/push';
 import { onReleaseBranch } from './on-release-branch';
@@ -19,7 +19,10 @@ export async function createRelease(options) {
     throw new Error('Working directory has uncommitted changes');
   }
 
-  const releaseBranch = await onReleaseBranch(options);
+  const sourceBranch = await currentBranch(options);
+  const releaseBranch = await onReleaseBranch(Object.assign({}, options, {
+    branch: sourceBranch,
+  }));
 
   if (!releaseBranch) {
     return 'Not on release branch: Canceling.';
@@ -56,10 +59,13 @@ export async function createRelease(options) {
   await addAndCommit(Object.assign({}, options, {
     message: `chore(release): Release ${bump.version} [ci skip]`,
   }));
-  await push(options);
+  await push(Object.assign({}, options, {
+    branch: sourceBranch,
+  }));
 
   // Create release tag
-  await checkout(Object.assign({}, options, { branch: `release-${bump.version}`, create: true }));
+  const tagBranch = `release-${bump.version}`;
+  await checkout(Object.assign({}, options, { branch: tagBranch, create: true }));
   await addAndCommit(Object.assign({}, options, {
     force: true,
     files: ['out'], // FIXME: Take from config
