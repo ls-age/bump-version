@@ -47,7 +47,7 @@ jobs:
       - deploy:
           name: Deploy changes
           command: |
-            echo "$NPM_TOKEN" > ./.npmrc
+            echo "$NPM_TOKEN" > ~/.npmrc
 
             git config --global user.email circleci@circleci && git config --global user.name CircleCI && git remote --v
 
