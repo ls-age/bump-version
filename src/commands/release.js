@@ -4,6 +4,7 @@ import { outputFile } from 'fs-extra';
 import loadPackage from '../lib/package';
 import bumpVersion from '../lib/version';
 import isClean from '../lib/git/status';
+import loggedIn from '../lib/npm/auth';
 import addAndCommit from '../lib/git/commit';
 import push from '../lib/git/push';
 import { onReleaseBranch } from './on-release-branch';
@@ -17,6 +18,10 @@ export async function createRelease(options) {
   }
 
   const releaseBranch = await onReleaseBranch(options);
+
+  if ((await loggedIn(options))) {
+    throw new Error('Not logged into npm');
+  }
 
   if (!releaseBranch) {
     return 'Not on release branch: Canceling.';
