@@ -6,6 +6,8 @@ import bumpVersion from '../lib/version';
 import isClean from '../lib/git/status';
 import loggedIn from '../lib/npm/auth';
 import addAndCommit from '../lib/git/commit';
+import { checkout } from '../lib/git/branch';
+import { createTag } from '../lib/git/tag';
 import push from '../lib/git/push';
 import { onReleaseBranch } from './on-release-branch';
 import { getFilteredTags } from './tags';
