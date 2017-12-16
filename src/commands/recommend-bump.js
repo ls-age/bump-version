@@ -1,5 +1,5 @@
 import { Command, StringOption, BooleanOption } from '@ls-age/expose';
-import { inc as increment, prerelease as isPrerelease, major, minor, patch } from 'semver';
+import { inc as increment, prerelease as isPrerelease, minor, patch } from 'semver';
 import loadPackage from '../lib/package';
 import { getFilteredTags } from './tags';
 import { getMessages } from './messages';
