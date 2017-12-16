@@ -10,7 +10,6 @@ import { onReleaseBranch } from './on-release-branch';
 import { getFilteredTags } from './tags';
 import { recommendBump } from './recommend-bump';
 import { createChangelog } from './changelog';
-import addAndCommit from '../lib/git/commit';
 
 export async function createRelease(options) {
   if (!(await isClean(options))) {
