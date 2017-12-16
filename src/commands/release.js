@@ -1,6 +1,10 @@
-import { Command } from '@ls-age/expose';
+import { Command, BooleanOption } from '@ls-age/expose';
+import loadPackage from '../lib/package';
+import bumpVersion from '../lib/version';
 import isClean from '../lib/git/status';
 import { onReleaseBranch } from './on-release-branch';
+import { getFilteredTags } from './tags';
+import { recommendBump } from './recommend-bump';
 
 export async function createRelease(options) {
   if (!(await isClean(options))) {
@@ -12,10 +16,35 @@ export async function createRelease(options) {
   if (!releaseBranch) {
     return 'Not on release branch: Canceling.';
   }
+
+  // Get tags for reuse later
+  const tags = await getFilteredTags(options);
+
+  // Get recommended version
+  const bump = await recommendBump(Object.assign(options, {
+    tags,
+    prerelease: releaseBranch !== true && releaseBranch,
+  }));
+
+  if (!bump.needed) {
+    return 'No release needed: Canceling.';
+  }
+
+  if (options.first) {
+    bump.version = (await loadPackage(options)).version;
+  } else {
+    await bumpVersion(bump.version, options);
+  }
 }
 
 export default new Command({
   name: 'release',
   description: 'Cut a new release',
   run: ({ options }) => createRelease(options),
+  options: [
+    new BooleanOption({
+      name: 'first',
+      description: 'Do not increment version number',
+    }),
+  ],
 });
