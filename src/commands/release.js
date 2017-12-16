@@ -1,10 +1,13 @@
+import { join } from 'path';
 import { Command, BooleanOption } from '@ls-age/expose';
+import { outputFile } from 'fs-extra';
 import loadPackage from '../lib/package';
 import bumpVersion from '../lib/version';
 import isClean from '../lib/git/status';
 import { onReleaseBranch } from './on-release-branch';
 import { getFilteredTags } from './tags';
 import { recommendBump } from './recommend-bump';
+import { createChangelog } from './changelog';
 
 export async function createRelease(options) {
   if (!(await isClean(options))) {
@@ -35,6 +38,11 @@ export async function createRelease(options) {
   } else {
     await bumpVersion(bump.version, options);
   }
+
+  await outputFile(
+    join(options.cwd || process.cwd(), 'CHANGELOG.md'),
+    await createChangelog(options)
+  );
 }
 
 export default new Command({
