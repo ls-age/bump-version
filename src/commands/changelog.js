@@ -20,7 +20,7 @@ export async function createChangelog(options) {
       from: tag && tag.name,
       until: last ? last.name : 'HEAD',
       date: last ? last.date : new Date(),
-      version: last ? last.name : 'Upcoming',
+      version: last ? last.name : pkg.version,
     };
   });
 
@@ -44,7 +44,7 @@ export async function createChangelog(options) {
 
   const versionLogs = await Promise.all(
     byVersion.map(({ messages, version, date }) => {
-      if (messages.length === 0 && version === 'Upcoming') {
+      if (messages.length === 0 && version === pkg.version) {
         return '';
       }
       const writer = createWriter(Object.assign({
