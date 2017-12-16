@@ -43,7 +43,7 @@ export async function createRelease(options) {
   const nonPrereleaseTags = filterTags(tags, 'non-prerelease');
 
   // Get recommended version
-  const pkg = await loadPackage(options)
+  const pkg = await loadPackage(options);
   const bump = await recommendBump(Object.assign({}, options, {
     pkg,
     tags,
