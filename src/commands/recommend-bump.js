@@ -1,19 +1,30 @@
-import { Command } from '@ls-age/expose';
-import { getLatestTag } from '../lib/tags';
+import { Command, StringOption, BooleanOption } from '@ls-age/expose';
+import { inc as increment } from 'semver';
+import loadPackage from '../lib/package';
+import { getFilteredTags } from './tags';
 import { getMessages } from './messages';
 
-const Recommendation = [
+const VersionTypes = [
   'major',
   'minor',
   'patch',
 ];
 
 export async function recommendBump(options) {
-  const latestTag = options.latestTag || await getLatestTag(Object.assign({
-    fetch: true,
-  }, options));
+  const pkg = options.pkg || await loadPackage(options);
+
+  let latestTag = options.latestTag;
+
+  if (!latestTag) {
+    const tags = await getFilteredTags(Object.assign({
+      fetch: true,
+    }, options));
+
+    latestTag = tags.length ? tags[0] : undefined;
+  }
+
   const messages = options.messages || await getMessages(Object.assign({
-    from: latestTag.name,
+    from: latestTag && latestTag.name,
   }, options));
 
   const level = messages
@@ -26,12 +37,32 @@ export async function recommendBump(options) {
     })
     .reduce((a, b) => Math.min(a, b), 2);
 
-  return Recommendation[level];
+  const incType = `${options.prerelease ? 'pre' : ''}${VersionTypes[level]}`;
+  const incArgs = [incType].concat(options.prerelease || undefined);
+
+  if (options.type) {
+    return VersionTypes[level];
+  }
+
+  return {
+    type: VersionTypes[level],
+    version: increment(pkg.version, ...incArgs),
+  };
 }
 
 export default new Command({
   name: 'recommend-bump',
-  description: 'Recommends the next version bump',
+  description: 'Recommend the next version to publish',
 
   run: ({ options }) => recommendBump(options),
+  options: [
+    new StringOption({
+      name: 'prerelease',
+      description: 'Recommend prerelease bump',
+    }),
+    new BooleanOption({
+      name: 'type',
+      description: 'Retrurn type only',
+    }),
+  ],
 });
