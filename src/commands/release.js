@@ -33,7 +33,7 @@ export async function createRelease(options) {
   const tags = await getFilteredTags(options);
 
   // Get recommended version
-  const bump = await recommendBump(Object.assign(options, {
+  const bump = await recommendBump(Object.assign({}, options, {
     tags,
     prerelease: releaseBranch !== true && releaseBranch,
   }));
