@@ -1,7 +1,9 @@
 import run from '../run';
 
-export function add({ files = ['.'], cwd }) {
-  return run('git', ['add', ...files], { cwd });
+export function add({ files = ['.'], force = false, cwd }) {
+  const args = ['add', ...(force ? ['-f', ...files] : files)];
+
+  return run('git', args, { cwd });
 }
 
 export function commit({ message, cwd }) {
