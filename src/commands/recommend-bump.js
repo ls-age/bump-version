@@ -40,14 +40,16 @@ export async function recommendBump(options) {
   const incType = `${options.prerelease ? 'pre' : ''}${VersionTypes[level]}`;
   const incArgs = [incType].concat(options.prerelease || undefined);
 
-  if (options.type) {
-    return VersionTypes[level];
-  }
-
-  return {
-    type: VersionTypes[level],
+  const result = {
+    type: VersionTypes[level || 2],
     version: increment(pkg.version, ...incArgs),
   };
+
+  if (options.only) {
+    return result[options.only];
+  }
+
+  return result;
 }
 
 export default new Command({
@@ -61,8 +63,12 @@ export default new Command({
       description: 'Recommend prerelease bump',
     }),
     new BooleanOption({
-      name: 'type',
-      description: 'Return type only',
+      name: 'from-branch',
+      description: 'Take prerelease from current git branch',
+    }),
+    new StringOption({
+      name: 'only',
+      description: 'Return the given field only',
     }),
   ],
 });
