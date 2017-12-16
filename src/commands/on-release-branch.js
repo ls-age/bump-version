@@ -1,5 +1,5 @@
 import { Command } from '@ls-age/expose';
-import { currentBranch } from '../lib/branch';
+import { currentBranch } from '../lib/git/branch';
 
 export async function onReleaseBranch(options) {
   const branch = await currentBranch(options);
