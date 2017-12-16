@@ -6,6 +6,7 @@ import loadPackage, { getRepo } from '../lib/package';
 import bumpVersion from '../lib/version';
 import isClean from '../lib/git/status';
 import loggedInToNpm from '../lib/npm/auth';
+import publishToNpm from '../lib/npm/publish';
 import addAndCommit from '../lib/git/commit';
 import { checkout, currentBranch } from '../lib/git/branch';
 import { createTag, filterTags } from '../lib/git/tag';
