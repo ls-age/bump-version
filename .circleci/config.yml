@@ -51,5 +51,3 @@ jobs:
 
             node out/cli.js release
 
-            echo "Not implemented yet"
-            exit 0
