@@ -21,7 +21,7 @@ export async function createRelease(options) {
 
   const releaseBranch = await onReleaseBranch(options);
 
-  if ((await loggedIn(options))) {
+  if (!(await loggedIn(options))) {
     throw new Error('Not logged into npm');
   }
 
