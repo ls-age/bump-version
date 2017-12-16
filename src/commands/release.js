@@ -33,8 +33,9 @@ export async function createRelease(options) {
     throw new Error('Missing GitHub API token');
   }
 
-  // FIXME: Only if publishing to npm later
-  if (!(await loggedInToNpm(options))) {
+  // Check npm login
+  const pkg = await loadPackage(options);
+  if (!pkg.private && !(await loggedInToNpm(options))) {
     throw new Error('Not logged into npm');
   }
 
@@ -43,7 +44,6 @@ export async function createRelease(options) {
   const nonPrereleaseTags = filterTags(tags, 'non-prerelease');
 
   // Get recommended version
-  const pkg = await loadPackage(options);
   const bump = await recommendBump(Object.assign({}, options, {
     pkg,
     tags,
@@ -114,6 +114,12 @@ export async function createRelease(options) {
     body: releaseBody,
     prerelease: releaseBranch !== true,
   });
+
+  if (!pkg.private) {
+    await publishToNpm(Object.assign({}, options, {
+      tag: releaseBranch !== true && releaseBranch,
+    }));
+  }
 
   return bump.version;
 }
