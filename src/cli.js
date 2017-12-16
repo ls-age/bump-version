@@ -10,6 +10,7 @@ import messagesCommand from './commands/messages';
 import tagsCommand from './commands/tags';
 import recommendBumpCommand from './commands/recommend-bump';
 import onReleaseBranchCommand from './commands/on-release-branch';
+import cleanCommand from './commands/clean';
 
 const printingOptions = {};
 
@@ -88,5 +89,6 @@ cli.addCommand(messagesCommand);
 cli.addCommand(tagsCommand);
 cli.addCommand(recommendBumpCommand);
 cli.addCommand(onReleaseBranchCommand);
+cli.addCommand(cleanCommand);
 
 cli.run();
