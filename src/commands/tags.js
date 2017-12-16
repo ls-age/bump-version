@@ -1,5 +1,5 @@
 import { Command, BooleanOption, StringOption } from '@ls-age/expose';
-import { fetchTags, getTags, tagFilters, filterTags } from '../lib/tags';
+import { fetchTags, getTags, tagFilters, filterTags } from '../lib/git/tag';
 
 export const fetchOption = new BooleanOption({
   name: 'fetch',
