@@ -47,6 +47,8 @@ jobs:
       - deploy:
           name: Deploy changes
           command: |
+            echo "$NPM_TOKEN" > ./.npmrc
+
             node out/cli.js release
 
             echo "Not implemented yet"
