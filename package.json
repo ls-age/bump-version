@@ -1,8 +1,11 @@
 {
   "name": "@ls-age/bump-version",
-  "version": "0.1.0",
+  "version": "0.1.0-beta.2",
   "description": "",
   "main": "out/index.js",
+  "bin": {
+    "bump-version": "out/cli.js"
+  },
   "scripts": {
     "compile": "babel -d out src",
     "lint": "eslint src test",
@@ -19,8 +22,21 @@
   },
   "homepage": "https://github.com/ls-age/bump-version#readme",
   "dependencies": {
+    "@ls-age/expose": "^0.2.0-beta.3",
+    "bitbucket-url-to-object": "^0.3.0",
+    "conventional-changelog-angular": "^1.5.2",
+    "conventional-changelog-writer": "^2.0.2",
+    "conventional-commits-parser": "^2.0.1",
     "conventional-recommended-bump": "^1.0.3",
-    "yargs": "^10.0.3"
+    "dateformat": "^3.0.2",
+    "execa": "^0.8.0",
+    "fs-extra": "^4.0.3",
+    "github": "^13.0.1",
+    "github-url-to-object": "^4.0.2",
+    "joi": "^13.0.2",
+    "semver": "^5.4.1",
+    "stream-to-promise": "^2.2.0",
+    "yup": "^0.23.0"
   },
   "devDependencies": {
     "@ls-age/babel-preset": "^0.3.0",
@@ -29,9 +45,14 @@
     "eslint": "^4.11.0"
   },
   "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 2017
+    },
     "extends": "@ls-age"
   },
   "babel": {
-    "presets": ["@ls-age/babel-preset"]
+    "presets": [
+      "@ls-age/babel-preset"
+    ]
   }
 }
