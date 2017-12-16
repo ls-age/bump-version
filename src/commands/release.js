@@ -21,12 +21,12 @@ export async function createRelease(options) {
 
   const releaseBranch = await onReleaseBranch(options);
 
-  if (!(await loggedIn(options))) {
-    throw new Error('Not logged into npm');
-  }
-
   if (!releaseBranch) {
     return 'Not on release branch: Canceling.';
+  }
+
+  if (!(await loggedIn(options))) {
+    throw new Error('Not logged into npm');
   }
 
   // Get tags for reuse later
