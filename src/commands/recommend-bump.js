@@ -13,7 +13,7 @@ const VersionTypes = [
 export async function recommendBump(options) {
   const pkg = options.pkg || await loadPackage(options);
 
-  let latestTag = options.latestTag;
+  let latestTag = options.latestTag || (Array.isArray(options.tags) && options.tags[0]);
 
   if (!latestTag) {
     const tags = await getFilteredTags(Object.assign({
