@@ -7,7 +7,8 @@ import { printResult, handleError } from './lib/cli';
 import changelogCommand from './commands/changelog';
 import messagesCommand from './commands/messages';
 import tagsCommand from './commands/tags';
-import recommendBumpCommand from './commands/recommend-bump.js';
+import recommendBumpCommand from './commands/recommend-bump';
+import onReleaseBranchCommand from './commands/on-release-branch';
 
 const printingOptions = {};
 
@@ -77,5 +78,6 @@ cli.addCommand(changelogCommand);
 cli.addCommand(messagesCommand);
 cli.addCommand(tagsCommand);
 cli.addCommand(recommendBumpCommand);
+cli.addCommand(onReleaseBranchCommand);
 
 cli.run();
