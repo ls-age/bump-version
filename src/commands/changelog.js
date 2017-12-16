@@ -10,12 +10,17 @@ import { getMessages } from './messages';
 export async function createChangelog(options) {
   const [{ writerOpts }, tags, pkg] = await Promise.all([
     angular,
-    getFilteredTags(Object.assign(options, { filter: 'non-prerelease' })),
+    options.tags ? Promise.resolve(options.tags) : getFilteredTags(Object.assign(options, {
+      filter: 'non-prerelease',
+    })),
     loadPackage(options),
   ]);
 
   const msgOptions = [...tags, null].map((tag, i) => {
     const last = tags[i - 1];
+
+    console.log('>>>> ', last, tag);
+
     return {
       from: tag && tag.name,
       until: last ? last.name : 'HEAD',
@@ -24,13 +29,17 @@ export async function createChangelog(options) {
     };
   });
 
-  const byVersion = await Promise.all(
+  let byVersion = await Promise.all(
     msgOptions.map(({ from, until, version, date }) => getMessages(Object.assign(options, {
       from,
       until,
     }))
       .then(messages => ({ messages, version, date })))
   );
+
+  if (options.last) {
+    byVersion = [byVersion[0]];
+  }
 
   const { host, user, repo, https_url } = getRepo(pkg);
 

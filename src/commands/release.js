@@ -1,10 +1,11 @@
 import { join } from 'path';
 import { Command, BooleanOption, StringOption } from '@ls-age/expose';
 import { outputFile } from 'fs-extra';
-import loadPackage from '../lib/package';
+import GitHub from 'github';
+import loadPackage, { getRepo } from '../lib/package';
 import bumpVersion from '../lib/version';
 import isClean from '../lib/git/status';
-import loggedIn from '../lib/npm/auth';
+import loggedInToNpm from '../lib/npm/auth';
 import addAndCommit from '../lib/git/commit';
 import { checkout, currentBranch } from '../lib/git/branch';
 import { createTag } from '../lib/git/tag';
@@ -28,15 +29,23 @@ export async function createRelease(options) {
     return 'Not on release branch: Canceling.';
   }
 
-  if (!(await loggedIn(options))) {
+  if (!options['gh-token']) {
+    throw new Error('Missing GitHub API token');
+  }
+
+  // FIXME: Only if publishing to npm later
+  if (!(await loggedInToNpm(options))) {
     throw new Error('Not logged into npm');
   }
 
   // Get tags for reuse later
   const tags = await getFilteredTags(options);
+  const nonPrereleaseTags = filterTags(tags, 'non-prerelease');
 
   // Get recommended version
+  const pkg = await loadPackage(options)
   const bump = await recommendBump(Object.assign({}, options, {
+    pkg,
     tags,
     prerelease: releaseBranch !== true && releaseBranch,
   }));
@@ -64,6 +73,7 @@ export async function createRelease(options) {
   }));
 
   // Create release tag
+  const tagPrefix = 'v'; // FIXME: Tag from config
   const tagBranch = `release-${bump.version}`;
   await checkout(Object.assign({}, options, { branch: tagBranch, create: true }));
   await addAndCommit(Object.assign({}, options, {
@@ -72,7 +82,7 @@ export async function createRelease(options) {
     message: `chore(release): Add ${bump.version} release files [ci skip]`,
   }));
   await createTag({
-    prefix: 'v', // FIXME: Tag from config
+    prefix: tagPrefix,
     version: bump.version,
     message: `chore(release): Add ${bump.version} release tag [ci skip]`,
   });
@@ -80,6 +90,26 @@ export async function createRelease(options) {
     branch: sourceBranch,
     tags: true,
   }));
+
+  const github = new GitHub({});
+  github.authenticate({
+    type: 'token',
+    token: options['gh-token'],
+  });
+
+  const releaseBody = await createChangelog(Object.assign({}, options, {
+    tags: nonPrereleaseTags,
+    last: true,
+    pkg,
+  }));
+
+  const { user, repo } = getRepo(pkg);
+  await github.createRelease({
+    owner: user,
+    repo,
+    tag_name: `${tagPrefix}${bump.version}`,
+    body: releaseBody,
+  });
 
   return bump.version;
 }
@@ -89,6 +119,10 @@ export default new Command({
   description: 'Cut a new release',
   run: ({ options }) => createRelease(options),
   options: [
+    new StringOption({
+      name: 'gh-token',
+      description: 'GitHub API token to use',
+    }),
     new BooleanOption({
       name: 'first',
       description: 'Do not increment version number',
