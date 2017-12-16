@@ -8,6 +8,7 @@ import { onReleaseBranch } from './on-release-branch';
 import { getFilteredTags } from './tags';
 import { recommendBump } from './recommend-bump';
 import { createChangelog } from './changelog';
+import addAndCommit from '../lib/git/commit';
 
 export async function createRelease(options) {
   if (!(await isClean(options))) {
@@ -43,6 +44,10 @@ export async function createRelease(options) {
     join(options.cwd || process.cwd(), 'CHANGELOG.md'),
     await createChangelog(options)
   );
+
+  addAndCommit(Object.assign({}, options, {
+    message: `chore(release): Release ${bump.version} [ci skip]`,
+  }));
 }
 
 export default new Command({
