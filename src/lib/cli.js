@@ -20,6 +20,12 @@ export function printResult(result, options) {
     data = result;
   }
 
+  if (options.statusCode) {
+    if (!result || (Array.isArray(result) && result.length === 0)) {
+      process.exitCode = 1;
+    }
+  }
+
   if (options.outFile) {
     const outPath = isAbsolute(options.outFile) ?
       options.outFile :
