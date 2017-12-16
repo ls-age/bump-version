@@ -112,6 +112,7 @@ export async function createRelease(options) {
     repo,
     tag_name: `${tagPrefix}${bump.version}`,
     body: releaseBody,
+    prerelease: releaseBranch !== true && releaseBranch,
   });
 
   return bump.version;
