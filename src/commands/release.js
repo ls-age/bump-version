@@ -47,7 +47,7 @@ export async function createRelease(options) {
   // Get recommended version
   const bump = await recommendBump(Object.assign({}, options, {
     pkg,
-    tags,
+    tags: releaseBranch === true ? nonPrereleaseTags : tags,
     prerelease: releaseBranch !== true && releaseBranch,
   }));
 
