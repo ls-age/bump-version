@@ -1,6 +1,6 @@
 {
   "name": "@ls-age/bump-version",
-  "version": "0.1.1-beta.0",
+  "version": "0.1.1",
   "description": "",
   "main": "out/index.js",
   "bin": {
