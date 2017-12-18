@@ -82,7 +82,7 @@ export async function createRelease(options) {
   await checkout(Object.assign({}, options, { branch: tagBranch, create: true }));
   await addAndCommit(Object.assign({}, options, {
     force: true,
-    files: ['out'], // FIXME: Take from config
+    files: options['release-files'] || ['out'],
     message: `chore(release): Add ${bump.version} release files [ci skip]`,
   }));
   await createTag({
@@ -141,6 +141,11 @@ export default new Command({
     new StringOption({
       name: 'remote',
       description: 'The git remote to push to',
+    }),
+    new StringOption({
+      name: 'release-files',
+      description: 'Directories to add to the release. Defaults to `out`',
+      array: true,
     }),
   ],
 });
