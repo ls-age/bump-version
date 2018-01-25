@@ -18,6 +18,9 @@ jobs:
           key: v1-npm-deps-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
+      - run:
+          name: Preparing lockfile update
+          command: $(npm bin)/greenkeeper-lockfile-update
 
       # Code Quality checks
       # TODO: Lint commit message
@@ -44,6 +47,9 @@ jobs:
 
       # Deployment
       - add_ssh_keys
+      - deploy:
+          name: Updating lockfile
+          command: $(npm bin)/greenkeeper-lockfile-upload
       - deploy:
           name: Deploy changes
           command: |

@@ -42,7 +42,8 @@
     "@ls-age/babel-preset": "^0.4.0",
     "@ls-age/eslint-config": "^0.8.0",
     "babel-cli": "^6.26.0",
-    "eslint": "^4.11.0"
+    "eslint": "^4.11.0",
+    "greenkeeper-lockfile": "^1.13.1"
   },
   "eslintConfig": {
     "parserOptions": {
