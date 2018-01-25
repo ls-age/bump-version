@@ -1,11 +1,10 @@
 # @ls-age/bump-version
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/ls-age/bump-version.svg)](https://greenkeeper.io/)
-
 > Automated **npm and GitHub releases** based on commit messages.
 > Follow the [Angular commit message guideline](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#commits), `bump-version` does the rest!
 
 [![CircleCI](https://circleci.com/gh/ls-age/bump-version.svg?style=svg)](https://circleci.com/gh/ls-age/bump-version)
+[![Greenkeeper badge](https://badges.greenkeeper.io/ls-age/bump-version.svg)](https://greenkeeper.io/)
 
 ## How it works
 
