@@ -39,13 +39,13 @@ export async function createChangelog(options) {
     byVersion = [byVersion[0]];
   }
 
-  const { host, user, repo, https_url } = getRepo(pkg);
+  const { host, user: owner, repo: repository, https_url: repoUrl } = getRepo(pkg);
 
   const writerContext = {
     host: `https://${host}`,
-    owner: user,
-    repository: repo,
-    repoUrl: https_url,
+    owner,
+    repository,
+    repoUrl,
     linkReferences: true,
   };
 
