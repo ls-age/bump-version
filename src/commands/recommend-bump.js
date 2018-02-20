@@ -1,5 +1,5 @@
 import { Command, StringOption, BooleanOption } from '@ls-age/expose';
-import { inc as increment, prerelease as isPrerelease, minor, patch } from 'semver';
+import { inc as increment, prerelease as isPrerelease, minor, patch, lt } from 'semver';
 import loadPackage from '../lib/package';
 import { getFilteredTags } from './tags';
 import { getMessages } from './messages';
@@ -51,12 +51,17 @@ export async function recommendBump(options) {
   const levelIfNeeded = Math.min(level, 2);
   let incType = `${options.prerelease ? 'pre' : ''}${VersionTypes[levelIfNeeded]}`;
 
-  if (options.prerelease && latestTag && isPrerelease(latestTag.name)) {
+  const lastIsPrerelease = isPrerelease(latestTag.name);
+  const alreadyAhead = lt(latestTag.name, pkg.version);
+
+  if (options.prerelease && latestTag && (lastIsPrerelease || alreadyAhead)) {
+    const versionToCheck = alreadyAhead ? pkg.version : latestTag.name;
+
     if (level >= 2) {
       incType = 'prerelease';
-    } else if (level === 1 && patch(latestTag.name) === 0) {
+    } else if (level === 1 && patch(versionToCheck) === 0) {
       incType = 'prerelease';
-    } else if (level === 0 && patch(latestTag.name) === 0 && minor(latestTag.name) === 0) {
+    } else if (level === 0 && patch(versionToCheck) === 0 && minor(versionToCheck) === 0) {
       incType = 'prerelease';
     }
   }

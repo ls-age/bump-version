@@ -1,3 +1,14 @@
+<a name="0.1.3-beta.0"></a>
+## 0.1.3-beta.0 (2018-02-20)
+
+
+### Bug Fixes
+
+* Increment prerelease only if really needed ([8b1856d](https://github.com/ls-age/bump-version/commits/8b1856d)), closes [#13](https://github.com/ls-age/bump-version/issues/13)
+
+
+
+
 <a name="0.1.2"></a>
 ## 0.1.2 (2017-12-18)
 
