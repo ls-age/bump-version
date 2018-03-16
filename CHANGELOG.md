@@ -1,3 +1,14 @@
+<a name="0.1.4-beta.0"></a>
+## 0.1.4-beta.0 (2018-03-16)
+
+
+### Bug Fixes
+
+* **recommend-bump:** Prevent error on initial release ([adc3f3c](https://github.com/ls-age/bump-version/commits/adc3f3c))
+
+
+
+
 <a name="0.1.3"></a>
 ## 0.1.3 (2018-02-20)
 
