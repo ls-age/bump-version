@@ -1,5 +1,10 @@
-<a name="0.2.0-beta.0"></a>
-# 0.2.0-beta.0 (2018-05-16)
+<a name="0.2.0-beta.1"></a>
+# 0.2.0-beta.1 (2018-05-16)
+
+
+### Bug Fixes
+
+* Fix typo ([3e937f7](https://github.com/ls-age/bump-version/commits/3e937f7))
 
 
 ### Features
