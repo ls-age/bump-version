@@ -1,3 +1,14 @@
+<a name="0.2.0-beta.0"></a>
+# 0.2.0-beta.0 (2018-05-16)
+
+
+### Features
+
+* Add releases assets using the `assets` flag ([9e71933](https://github.com/ls-age/bump-version/commits/9e71933))
+
+
+
+
 <a name="0.1.4"></a>
 ## 0.1.4 (2018-03-16)
 
