@@ -2,6 +2,7 @@ import { join } from 'path';
 import { Command, BooleanOption, StringOption } from '@ls-age/expose';
 import { outputFile } from 'fs-extra';
 import GitHub from 'github';
+import ghReleaseAssets from 'gh-release-assets';
 import loadPackage, { getRepo } from '../lib/package';
 import bumpVersion from '../lib/version';
 import isClean from '../lib/git/status';
@@ -108,13 +109,26 @@ export async function createRelease(options) {
   }));
 
   const { user, repo } = getRepo(pkg);
-  await github.repos.createRelease({
+  const release = await github.repos.createRelease({
     owner: user,
     repo,
     tag_name: `${tagPrefix}${bump.version}`,
     body: releaseBody,
     prerelease: releaseBranch !== true,
   });
+
+  if (options.assets) {
+    await new Promise((resolve, reject) => {
+      ghReleaseAssets({
+        url: release.assets_url,
+        token: options['gh-token'],
+        assets: options.assets,
+      }, (err, assets) => {
+        if (err) { return reject(err); }
+        return resolve(assets);
+      });
+    });
+  }
 
   if (!pkg.private) {
     await publishToNpm(Object.assign({}, options, {
@@ -145,6 +159,11 @@ export default new Command({
     new StringOption({
       name: 'release-files',
       description: 'Directories to add to the release. Defaults to `out`',
+      array: true,
+    }),
+    new StringOption({
+      name: 'assets',
+      description: 'Assets to add to the GitHub release',
       array: true,
     }),
   ],
