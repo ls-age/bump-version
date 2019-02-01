@@ -1,3 +1,14 @@
+<a name="0.2.0"></a>
+# 0.2.0 (2019-02-01)
+
+
+### Features
+
+* Use `--skip-release-files` to release without adding files ([a5e78d6](https://github.com/ls-age/bump-version/commits/a5e78d6))
+
+
+
+
 <a name="0.1.4"></a>
 ## 0.1.4 (2018-03-16)
 
