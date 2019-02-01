@@ -80,11 +80,14 @@ export async function createRelease(options) {
   const tagPrefix = 'v'; // FIXME: Tag from config
   const tagBranch = `release-${bump.version}`;
   await checkout(Object.assign({}, options, { branch: tagBranch, create: true }));
-  await addAndCommit(Object.assign({}, options, {
-    force: true,
-    files: options['release-files'] || ['out'],
-    message: `chore(release): Add ${bump.version} release files [ci skip]`,
-  }));
+
+  if (!options['skip-release-files']) {
+    await addAndCommit(Object.assign({}, options, {
+      force: true,
+      files: options['release-files'] || ['out'],
+      message: `chore(release): Add ${bump.version} release files [ci skip]`,
+    }));
+  }
   await createTag({
     prefix: tagPrefix,
     version: bump.version,
@@ -141,6 +144,10 @@ export default new Command({
     new StringOption({
       name: 'remote',
       description: 'The git remote to push to',
+    }),
+    new BooleanOption({
+      name: 'skip-release-files',
+      description: 'Do not add release files',
     }),
     new StringOption({
       name: 'release-files',
