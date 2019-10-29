@@ -13,10 +13,16 @@ export default function loadPackage(options) {
 
 export function getRepo(pkg) {
   if (!pkg.repository) {
-    return null;
+    throw new Error("Missing 'repository' field in package.json");
   }
 
   const input = pkg.repository.url || pkg.repository;
 
-  return github(input) || bitbucket(input);
+  const info = github(input) || bitbucket(input);
+
+  if (!info) {
+    throw new Error("Could not detect a 'repository' in package.json");
+  }
+
+  return info;
 }
