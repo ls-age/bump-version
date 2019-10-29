@@ -1,3 +1,14 @@
+<a name="0.2.1"></a>
+## 0.2.1 (2019-10-29)
+
+
+### Bug Fixes
+
+* Better error message for invalid repository ([e1f451a](https://github.com/ls-age/bump-version/commits/e1f451a))
+
+
+
+
 <a name="0.2.0"></a>
 # 0.2.0 (2019-02-01)
 
