@@ -58,5 +58,10 @@
     "presets": [
       "@ls-age/babel-preset"
     ]
+  },
+  "renovate": {
+    "extends": [
+      "@ls-age:automergeDev"
+    ]
   }
 }
