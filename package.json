@@ -34,7 +34,7 @@
     "github": "^13.0.1",
     "github-url-to-object": "^4.0.2",
     "joi": "^13.0.2",
-    "semver": "^5.4.1",
+    "semver": "^6.0.0",
     "stream-to-promise": "^2.2.0",
     "yup": "^0.24.0"
   },
