@@ -5,20 +5,25 @@ import { parse as parseCommitMessages } from '../lib/commitMessage';
 export function getMessages(options) {
   const { from, until, raw, cwd } = options;
 
-  return getLogs({ from, until, cwd })
-    .then(commits => {
-      if (raw) {
-        return commits;
-      }
+  return getLogs({ from, until, cwd }).then(commits => {
+    if (raw) {
+      return commits;
+    }
 
-      const messages = commits.map(({ message }) => message);
+    const messages = commits.map(({ message }) => message);
 
-      return parseCommitMessages(messages)
-        .then(results => results.map((result, i) => Object.assign({
-          hash: commits[i].hash,
-          date: new Date(commits[i].date),
-        }, result)));
-    });
+    return parseCommitMessages(messages).then(results =>
+      results.map((result, i) =>
+        Object.assign(
+          {
+            hash: commits[i].hash,
+            date: new Date(commits[i].date),
+          },
+          result
+        )
+      )
+    );
+  });
 }
 
 export default new Command({

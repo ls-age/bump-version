@@ -22,9 +22,11 @@ export async function createRelease(options) {
   }
 
   const sourceBranch = await currentBranch(options);
-  const releaseBranch = await onReleaseBranch(Object.assign({}, options, {
-    branch: sourceBranch,
-  }));
+  const releaseBranch = await onReleaseBranch(
+    Object.assign({}, options, {
+      branch: sourceBranch,
+    })
+  );
 
   if (!releaseBranch) {
     return 'Not on release branch: Canceling.';
@@ -45,11 +47,13 @@ export async function createRelease(options) {
   const nonPrereleaseTags = filterTags(tags, 'non-prerelease');
 
   // Get recommended version
-  const bump = await recommendBump(Object.assign({}, options, {
-    pkg,
-    tags: releaseBranch === true ? nonPrereleaseTags : tags,
-    prerelease: releaseBranch !== true && releaseBranch,
-  }));
+  const bump = await recommendBump(
+    Object.assign({}, options, {
+      pkg,
+      tags: releaseBranch === true ? nonPrereleaseTags : tags,
+      prerelease: releaseBranch !== true && releaseBranch,
+    })
+  );
 
   if (!bump.needed) {
     return 'No release needed: Canceling.';
@@ -63,18 +67,27 @@ export async function createRelease(options) {
 
   await outputFile(
     join(options.cwd || process.cwd(), 'CHANGELOG.md'),
-    await createChangelog(Object.assign({}, {
-      tags: nonPrereleaseTags,
-      pkg,
-    }))
+    await createChangelog(
+      Object.assign(
+        {},
+        {
+          tags: nonPrereleaseTags,
+          pkg,
+        }
+      )
+    )
   );
 
-  await addAndCommit(Object.assign({}, options, {
-    message: `chore(release): Release ${bump.version} [ci skip]`,
-  }));
-  await push(Object.assign({}, options, {
-    branch: sourceBranch,
-  }));
+  await addAndCommit(
+    Object.assign({}, options, {
+      message: `chore(release): Release ${bump.version} [ci skip]`,
+    })
+  );
+  await push(
+    Object.assign({}, options, {
+      branch: sourceBranch,
+    })
+  );
 
   // Create release tag
   const tagPrefix = 'v'; // FIXME: Tag from config
@@ -82,21 +95,25 @@ export async function createRelease(options) {
   await checkout(Object.assign({}, options, { branch: tagBranch, create: true }));
 
   if (!options['skip-release-files']) {
-    await addAndCommit(Object.assign({}, options, {
-      force: true,
-      files: options['release-files'] || ['out'],
-      message: `chore(release): Add ${bump.version} release files [ci skip]`,
-    }));
+    await addAndCommit(
+      Object.assign({}, options, {
+        force: true,
+        files: options['release-files'] || ['out'],
+        message: `chore(release): Add ${bump.version} release files [ci skip]`,
+      })
+    );
   }
   await createTag({
     prefix: tagPrefix,
     version: bump.version,
     message: `chore(release): Add ${bump.version} release tag [ci skip]`,
   });
-  await push(Object.assign({}, options, {
-    branch: sourceBranch,
-    tags: true,
-  }));
+  await push(
+    Object.assign({}, options, {
+      branch: sourceBranch,
+      tags: true,
+    })
+  );
 
   const github = new GitHub({});
   github.authenticate({
@@ -104,11 +121,13 @@ export async function createRelease(options) {
     token: options['gh-token'],
   });
 
-  const releaseBody = await createChangelog(Object.assign({}, options, {
-    tags: nonPrereleaseTags,
-    last: true,
-    pkg,
-  }));
+  const releaseBody = await createChangelog(
+    Object.assign({}, options, {
+      tags: nonPrereleaseTags,
+      last: true,
+      pkg,
+    })
+  );
 
   const { user, repo } = getRepo(pkg);
   await github.repos.createRelease({
@@ -120,9 +139,11 @@ export async function createRelease(options) {
   });
 
   if (!pkg.private) {
-    await publishToNpm(Object.assign({}, options, {
-      tag: releaseBranch !== true && releaseBranch,
-    }));
+    await publishToNpm(
+      Object.assign({}, options, {
+        tag: releaseBranch !== true && releaseBranch,
+      })
+    );
   }
 
   return bump.version;

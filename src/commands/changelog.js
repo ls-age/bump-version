@@ -10,9 +10,13 @@ import { getMessages } from './messages';
 export async function createChangelog(options) {
   const [{ writerOpts }, tags, pkg] = await Promise.all([
     angular,
-    options.tags ? Promise.resolve(options.tags) : getFilteredTags(Object.assign(options, {
-      filter: 'non-prerelease',
-    })),
+    options.tags
+      ? Promise.resolve(options.tags)
+      : getFilteredTags(
+          Object.assign(options, {
+            filter: 'non-prerelease',
+          })
+        ),
     loadPackage(options),
   ]);
 
@@ -28,11 +32,14 @@ export async function createChangelog(options) {
   });
 
   let byVersion = await Promise.all(
-    msgOptions.map(({ from, until, version, date }) => getMessages(Object.assign(options, {
-      from,
-      until,
-    }))
-      .then(messages => ({ messages, version, date })))
+    msgOptions.map(({ from, until, version, date }) =>
+      getMessages(
+        Object.assign(options, {
+          from,
+          until,
+        })
+      ).then(messages => ({ messages, version, date }))
+    )
   );
 
   if (options.last) {
@@ -54,10 +61,16 @@ export async function createChangelog(options) {
       if (messages.length === 0 && version === pkg.version) {
         return '';
       }
-      const writer = createWriter(Object.assign({
-        version: version.match(/v?(.*)/i)[1],
-        date: dateFormat(date, 'yyyy-mm-dd', true),
-      }, writerContext), writerOpts);
+      const writer = createWriter(
+        Object.assign(
+          {
+            version: version.match(/v?(.*)/i)[1],
+            date: dateFormat(date, 'yyyy-mm-dd', true),
+          },
+          writerContext
+        ),
+        writerOpts
+      );
 
       const promise = toPromise(writer);
       messages.forEach(m => writer.write(m));
@@ -74,7 +87,5 @@ export default new Command({
   name: 'changelog',
   description: 'Create changelog',
   run: ({ options }) => createChangelog(options),
-  options: [
-    fetchOption,
-  ],
+  options: [fetchOption],
 });

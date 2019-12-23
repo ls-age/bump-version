@@ -26,7 +26,7 @@ const cli = new Expose({
 });
 
 function toAbsolute(path) {
-  return (isAbsolute(path) ? path : join(process.cwd(), path));
+  return isAbsolute(path) ? path : join(process.cwd(), path);
 }
 
 // Global options
@@ -34,8 +34,7 @@ cli.addOptions([
   new StringOption({
     name: 'cwd',
     description: 'Manually set the working directory',
-    extendSchema: schema => schema
-      .transform(toAbsolute),
+    extendSchema: schema => schema.transform(toAbsolute),
     set(cwd) {
       printingOptions.cwd = cwd;
     },

@@ -11,19 +11,28 @@ export function fetchTags({ cwd }) {
 }
 
 export function getTags({ cwd }) {
-  return run('git', ['for-each-ref', '--sort', 'creatordate',
-    '--format', '{ "name": "%(refname:short)", "date": "%(creatordate)" }',
-    'refs/tags',
-  ], { cwd })
-    .then(({ stdout }) => stdout.split('\n').filter(l => l.length)
+  return run(
+    'git',
+    [
+      'for-each-ref',
+      '--sort',
+      'creatordate',
+      '--format',
+      '{ "name": "%(refname:short)", "date": "%(creatordate)" }',
+      'refs/tags',
+    ],
+    { cwd }
+  ).then(({ stdout }) =>
+    stdout
+      .split('\n')
+      .filter(l => l.length)
       .map(JSON.parse)
       .reverse()
-    );
+  );
 }
 
 export function getLatestTag(options) {
-  return getTags(options)
-    .then(tags => tags.length && tags[0]);
+  return getTags(options).then(tags => tags.length && tags[0]);
 }
 
 // Filters

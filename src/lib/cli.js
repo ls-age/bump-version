@@ -2,7 +2,9 @@ import { isAbsolute, join } from 'path';
 import { outputFile } from 'fs-extra';
 
 export function printResult(result, options) {
-  if (result === undefined) { return undefined; }
+  if (result === undefined) {
+    return undefined;
+  }
   if (result instanceof Array && options.limit) {
     return printResult(
       result.slice(0, options.limit),
@@ -27,9 +29,9 @@ export function printResult(result, options) {
   }
 
   if (options.outFile) {
-    const outPath = isAbsolute(options.outFile) ?
-      options.outFile :
-      join((options.cwd || process.cwd()), options.outFile);
+    const outPath = isAbsolute(options.outFile)
+      ? options.outFile
+      : join(options.cwd || process.cwd(), options.outFile);
 
     if (options.verbose) {
       console.log('Writing to file', outPath); // eslint-disable-line no-console
