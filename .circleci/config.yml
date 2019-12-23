@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:10
     steps:
       - checkout
       - restore_cache:
@@ -10,17 +10,11 @@ jobs:
             - v1-npm-deps-{{ checksum "package-lock.json" }}
       - run:
           name: Installing npm dependencies
-          command: npm install
-      - run:
-          name: Resetting package-lock changes
-          command: git checkout -- package-lock.json
+          command: npm ci
       - save_cache:
-          key: v1-npm-deps-{{ checksum "package-lock.json" }}
+          key: v1-npm-cache-{{ checksum "package-lock.json" }}
           paths:
-            - node_modules
-      - run:
-          name: Preparing lockfile update
-          command: $(npm bin)/greenkeeper-lockfile-update
+            - ~/.npm
 
       # Code Quality checks
       # TODO: Lint commit message
@@ -40,16 +34,11 @@ jobs:
       # Store Results
       - store_test_results:
           path: ~/reports
-          when: always
       - store_artifacts:
           path: ~/reports
-          when: always
 
       # Deployment
       - add_ssh_keys
-      - deploy:
-          name: Updating lockfile
-          command: $(npm bin)/greenkeeper-lockfile-upload
       - deploy:
           name: Deploy changes
           command: |
@@ -58,4 +47,3 @@ jobs:
             git config --global user.email circleci@circleci && git config --global user.name CircleCI && git remote --v
 
             node out/cli.js release --gh-token $GITHUB_TOKEN --verbose
-
