@@ -2,9 +2,10 @@ import { Command } from '@ls-age/expose';
 import { currentBranch } from '../lib/git/branch';
 
 export async function onReleaseBranch(options) {
-  const branch = options.branch || await currentBranch(options);
+  const branch = options.branch || (await currentBranch(options));
 
-  if (branch === 'beta') { // FIXME: Take from config
+  if (branch === 'beta') {
+    // FIXME: Take from config
     return 'beta';
   }
   if (branch === 'master') {

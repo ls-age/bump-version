@@ -30,6 +30,10 @@ jobs:
           name: Linting source files
           command: npm run lint -- --format junit --output-file ~/reports/eslint.xml
           when: always
+      - run:
+          name: Checking code formatting
+          command: npm run format -- --check
+          when: always
 
       # Store Results
       - store_test_results:

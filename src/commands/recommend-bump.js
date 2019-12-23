@@ -4,31 +4,38 @@ import loadPackage from '../lib/package';
 import { getFilteredTags } from './tags';
 import { getMessages } from './messages';
 
-const VersionTypes = [
-  'major',
-  'minor',
-  'patch',
-];
+const VersionTypes = ['major', 'minor', 'patch'];
 
 export async function recommendBump(options) {
-  const pkg = options.pkg || await loadPackage(options);
+  const pkg = options.pkg || (await loadPackage(options));
 
-  let latestTag = options.latestTag || (Array.isArray(options.tags) && options.tags.length ?
-    options.tags[0] :
-    undefined
-  );
+  let latestTag =
+    options.latestTag ||
+    (Array.isArray(options.tags) && options.tags.length ? options.tags[0] : undefined);
 
   if (latestTag === undefined) {
-    const tags = await getFilteredTags(Object.assign({
-      fetch: true,
-    }, options));
+    const tags = await getFilteredTags(
+      Object.assign(
+        {
+          fetch: true,
+        },
+        options
+      )
+    );
 
     latestTag = tags.length ? tags[0] : undefined;
   }
 
-  const messages = options.messages || await getMessages(Object.assign({
-    from: latestTag && latestTag.name,
-  }, options));
+  const messages =
+    options.messages ||
+    (await getMessages(
+      Object.assign(
+        {
+          from: latestTag && latestTag.name,
+        },
+        options
+      )
+    ));
 
   const level = messages
     .map(({ type, notes }) => {
