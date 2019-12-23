@@ -12,7 +12,7 @@ jobs:
           name: Installing npm dependencies
           command: npm ci
       - save_cache:
-          key: v1-npm-cache-{{ checksum "package-lock.json" }}-<<parameters.app>>
+          key: v1-npm-cache-{{ checksum "package-lock.json" }}
           paths:
             - ~/.npm
 
