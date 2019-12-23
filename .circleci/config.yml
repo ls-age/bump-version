@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:10
     steps:
       - checkout
       - restore_cache:
@@ -10,11 +10,11 @@ jobs:
             - v1-npm-deps-{{ checksum "package-lock.json" }}
       - run:
           name: Installing npm dependencies
-          command: npm install
+          command: npm ci
       - save_cache:
-          key: v1-npm-deps-{{ checksum "package-lock.json" }}
+          key: v1-npm-cache-{{ checksum "package-lock.json" }}-<<parameters.app>>
           paths:
-            - node_modules
+            - ~/.npm
 
       # Code Quality checks
       # TODO: Lint commit message
