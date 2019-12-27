@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { Command, BooleanOption, StringOption } from '@ls-age/expose';
 import { outputFile } from 'fs-extra';
-import GitHub from 'github';
+import GitHub from '@octokit/rest';
 import loadPackage, { getRepo } from '../lib/package';
 import bumpVersion from '../lib/version';
 import isClean from '../lib/git/status';
