@@ -3,9 +3,9 @@ import getLogs from '../lib/logs';
 import { parse as parseCommitMessages } from '../lib/commitMessage';
 
 export function getMessages(options) {
-  const { from, until, raw, cwd } = options;
+  const { from, until, raw, cwd, dir } = options;
 
-  return getLogs({ from, until, cwd }).then(commits => {
+  return getLogs({ from, until, cwd, dir }).then(commits => {
     if (raw) {
       return commits;
     }

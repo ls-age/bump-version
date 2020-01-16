@@ -2,8 +2,8 @@ import { valid as validSemver, prerelease as isPrerelease } from 'semver';
 import run from '../run';
 
 // eslint-disable-next-line import/prefer-default-export
-export function createTag({ prefix = '', version, message, cwd }) {
-  return run('git', ['tag', '-a', `${prefix}${version}`, '-m', message], { cwd });
+export function createTag({ name, message, cwd }) {
+  return run(['tag', '-a', name, '-m', message], { cwd });
 }
 
 export function fetchTags({ cwd }) {
@@ -37,8 +37,8 @@ export function getLatestTag(options) {
 
 // Filters
 
-function semver({ name }) {
-  return validSemver(name);
+function semver({ name, version }) {
+  return validSemver(version || name);
 }
 
 function nonSemver(tag) {
@@ -46,11 +46,11 @@ function nonSemver(tag) {
 }
 
 function prerelease(tag) {
-  return semver(tag) && isPrerelease(tag.name);
+  return semver(tag) && isPrerelease(tag.version || tag.name);
 }
 
 function nonPrerelease(tag) {
-  return semver(tag) && !isPrerelease(tag.name);
+  return semver(tag) && !isPrerelease(tag.version || tag.name);
 }
 
 export const tagFilters = {
