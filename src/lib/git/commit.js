@@ -1,13 +1,13 @@
-import run from '../run';
+import { runGit } from './helpers';
 
-export function add({ files = ['.'], force = false, cwd }) {
-  const args = ['add', ...(force ? ['-f', ...files] : files)];
+export function add({ files = ['.'], force = false, cwd, dryRun = false }) {
+  const args = ['add', ...(force ? ['-f'] : []), ...files];
 
-  return run('git', args, { cwd });
+  return runGit(args, { cwd, dryRun });
 }
 
-export function commit({ message, cwd }) {
-  return run('git', ['commit', '-m', message], { cwd });
+export function commit({ message, cwd, dryRun }) {
+  return runGit(['commit', '-m', message], { cwd, dryRun });
 }
 
 export default async function addAndCommit(options) {
