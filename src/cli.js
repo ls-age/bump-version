@@ -11,10 +11,11 @@ import tagsCommand from './commands/tags';
 import recommendBumpCommand from './commands/recommend-bump';
 import onReleaseBranchCommand from './commands/on-release-branch';
 import cleanCommand from './commands/clean';
+import inMonorepo from './commands/in-monorepo.js';
 
-const printingOptions = {};
+export const printingOptions = {};
 
-const cli = new Expose({
+export const cli = new Expose({
   name: Object.keys(bin)[0],
   description,
   onResult(result) {
@@ -38,6 +39,10 @@ cli.addOptions([
     set(cwd) {
       printingOptions.cwd = cwd;
     },
+  }),
+  new StringOption({
+    name: 'dir',
+    description: 'Directory of the package to handle in monorepos',
   }),
   new NumberOption({
     name: 'limit',
@@ -89,5 +94,8 @@ cli.addCommand(tagsCommand);
 cli.addCommand(recommendBumpCommand);
 cli.addCommand(onReleaseBranchCommand);
 cli.addCommand(cleanCommand);
+cli.addCommand(inMonorepo);
 
-cli.run();
+if (!module.parent) {
+  cli.run();
+}

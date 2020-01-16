@@ -50,7 +50,7 @@
   },
   "eslintConfig": {
     "parserOptions": {
-      "ecmaVersion": 2017
+      "ecmaVersion": 2019
     },
     "extends": [
       "@ls-age",
