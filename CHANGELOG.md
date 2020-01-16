@@ -1,3 +1,23 @@
+<a name="1.0.0-beta.0"></a>
+# 1.0.0-beta.0 (2020-01-16)
+
+
+### Features
+
+* Add 'in-monorepo' command ([820fac7](https://github.com/ls-age/bump-version/commits/820fac7))
+* Basic monorepo support ([#45](https://github.com/ls-age/bump-version/issues/45)) ([a186499](https://github.com/ls-age/bump-version/commits/a186499))
+* Preview releases with the '--dry-run' option ([3348f2c](https://github.com/ls-age/bump-version/commits/3348f2c))
+* Run for subpackages with the '--dir' option ([f1d29a9](https://github.com/ls-age/bump-version/commits/f1d29a9))
+* Support releasing packages in subdirs ([7e11b5a](https://github.com/ls-age/bump-version/commits/7e11b5a))
+
+
+### BREAKING CHANGES
+
+* release now returns an object
+
+
+
+
 <a name="0.2.1"></a>
 ## 0.2.1 (2019-10-29)
 
