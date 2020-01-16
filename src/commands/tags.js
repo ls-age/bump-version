@@ -1,6 +1,5 @@
 import { Command, BooleanOption, StringOption } from '@ls-age/expose';
 import { fetchTags, getTags, tagFilters, filterTags } from '../lib/git/tag';
-import loadPackage from '../lib/package';
 import { tagPrefix } from '../lib/monorepo';
 import { debug } from '../lib/log';
 
