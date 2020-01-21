@@ -151,7 +151,7 @@ export async function createRelease(options) {
     });
   }
 
-  await skipInDryRun(`Skipping creation of tag '${tagName}'`, () =>
+  await skipInDryRun(dryRun, `Skipping creation of tag '${tagName}'`, () =>
     createTag({
       dryRun,
       name: tagName,
