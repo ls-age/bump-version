@@ -1,5 +1,10 @@
-<a name="1.0.0-beta.0"></a>
-# 1.0.0-beta.0 (2020-01-16)
+<a name="1.0.0-beta.1"></a>
+# 1.0.0-beta.1 (2020-01-21)
+
+
+### Bug Fixes
+
+* **release:** Skip tag creation in dry run only ([2b7a3e0](https://github.com/ls-age/bump-version/commits/2b7a3e0))
 
 
 ### Features
