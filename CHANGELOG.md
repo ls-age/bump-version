@@ -4,6 +4,7 @@
 
 ### Bug Fixes
 
+* **release:** Fix typo that prevents tag creation ([c8e215b](https://github.com/ls-age/bump-version/commits/c8e215b))
 * **release:** Skip tag creation in dry run only ([2b7a3e0](https://github.com/ls-age/bump-version/commits/2b7a3e0))
 
 
