@@ -3,7 +3,7 @@ import run from '../run';
 
 // eslint-disable-next-line import/prefer-default-export
 export function createTag({ name, message, cwd }) {
-  return run(['tag', '-a', name, '-m', message], { cwd });
+  return run('git', ['tag', '-a', name, '-m', message], { cwd });
 }
 
 export function fetchTags({ cwd }) {
