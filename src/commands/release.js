@@ -103,7 +103,7 @@ export async function createRelease(options) {
     })
   );
 
-  if (!bump.needed) {
+  if (!options.first && !bump.needed) {
     info('No release needed: Cancelling.');
     return { released: false };
   }
@@ -126,8 +126,9 @@ export async function createRelease(options) {
   await addAndCommit({
     ...options,
     dryRun,
-    files: [changelogPath],
-    message: `chore(release): Release ${bump.version} [ci skip]`,
+    message: `chore(release): Release ${options.dir ? `${pkg.name} ` : ''}${
+      bump.version
+    } [ci skip]`,
   });
 
   await skipInDryRun(dryRun, 'Skipping git push', () => push({ ...options, branch: sourceBranch }));
@@ -189,11 +190,11 @@ export async function createRelease(options) {
   });
 
   if (!pkg.private) {
-    await publishToNpm(
-      Object.assign({}, options, {
-        tag: releaseBranch !== true && releaseBranch,
-      })
-    );
+    await publishToNpm({
+      ...options,
+      packageManager: options['package-manager'],
+      tag: releaseBranch !== true && releaseBranch,
+    });
   }
 
   return { released: true, version: bump.version };
@@ -228,6 +229,10 @@ export default new Command({
       name: 'release-files',
       description: 'Directories to add to the release. Defaults to `out`',
       array: true,
+    }),
+    new StringOption({
+      name: 'package-manager',
+      description: 'The package manager to use. Defaults to `npm`',
     }),
   ],
 });

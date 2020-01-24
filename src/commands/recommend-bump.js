@@ -59,7 +59,7 @@ export async function recommendBump(options) {
   let incType = `${options.prerelease ? 'pre' : ''}${VersionTypes[levelIfNeeded]}`;
 
   const lastIsPrerelease = latestTag && isPrerelease(latestTag.name);
-  const alreadyAhead = latestTag && lt(latestTag.name, pkg.version);
+  const alreadyAhead = latestTag && lt(latestTag.version, pkg.version);
 
   if (options.prerelease && latestTag && (lastIsPrerelease || alreadyAhead)) {
     const versionToCheck = alreadyAhead ? pkg.version : latestTag.name;
