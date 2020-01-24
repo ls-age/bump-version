@@ -123,12 +123,12 @@ export async function createRelease(options) {
     outputFile(changelogPath, changelog)
   );
 
+  const commitMessageVersion = `${options.dir ? `${pkg.name} ` : ''}${bump.version}`;
+
   await addAndCommit({
     ...options,
     dryRun,
-    message: `chore(release): Release ${options.dir ? `${pkg.name} ` : ''}${
-      bump.version
-    } [ci skip]`,
+    message: `chore(release): Release ${commitMessageVersion} [ci skip]`,
   });
 
   await skipInDryRun(dryRun, 'Skipping git push', () => push({ ...options, branch: sourceBranch }));
@@ -148,7 +148,7 @@ export async function createRelease(options) {
       dryRun,
       force: true,
       files: options['release-files'] || [join(options.dir || '.', 'out')],
-      message: `chore(release): Add ${bump.version} release files [ci skip]`,
+      message: `chore(release): Add ${commitMessageVersion} release files [ci skip]`,
     });
   }
 
@@ -156,7 +156,7 @@ export async function createRelease(options) {
     createTag({
       dryRun,
       name: tagName,
-      message: `chore(release): Add ${bump.version} release tag [ci skip]`,
+      message: `chore(release): Add ${commitMessageVersion} release tag [ci skip]`,
     })
   );
 
