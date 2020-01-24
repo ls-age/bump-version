@@ -147,6 +147,7 @@ export async function createRelease(options) {
       ...options,
       dryRun,
       force: true,
+      verify: false,
       files: options['release-files'] || [join(options.dir || '.', 'out')],
       message: `chore(release): Add ${commitMessageVersion} release files [ci skip]`,
     });

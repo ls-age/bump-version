@@ -6,8 +6,8 @@ export function add({ files = ['.'], force = false, cwd, dryRun = false }) {
   return runGit(args, { cwd, dryRun });
 }
 
-export function commit({ message, cwd, dryRun }) {
-  return runGit(['commit', '-m', message], { cwd, dryRun });
+export function commit({ message, cwd, dryRun, verify = true }) {
+  return runGit(['commit', '-m', message, ...(verify ? [] : ['--no-verify'])], { cwd, dryRun });
 }
 
 export default async function addAndCommit(options) {
