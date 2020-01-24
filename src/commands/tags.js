@@ -39,6 +39,8 @@ export async function getFilteredTags(options) {
     }, []);
   }
 
+  tags = tags.map(t => ({ ...t, version: t.name }));
+
   return filterTags(tags, options.filter || false);
 }
 
