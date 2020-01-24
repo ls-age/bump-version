@@ -1,11 +1,12 @@
 <a name="1.0.0-beta.1"></a>
-# 1.0.0-beta.1 (2020-01-21)
+# 1.0.0-beta.1 (2020-01-24)
 
 
 ### Bug Fixes
 
 * **release:** Fix typo that prevents tag creation ([c8e215b](https://github.com/ls-age/bump-version/commits/c8e215b))
 * **release:** Skip tag creation in dry run only ([2b7a3e0](https://github.com/ls-age/bump-version/commits/2b7a3e0))
+* Fix typo ([#48](https://github.com/ls-age/bump-version/issues/48)) ([d1a7b76](https://github.com/ls-age/bump-version/commits/d1a7b76))
 
 
 ### Features
@@ -14,6 +15,7 @@
 * Basic monorepo support ([#45](https://github.com/ls-age/bump-version/issues/45)) ([a186499](https://github.com/ls-age/bump-version/commits/a186499))
 * Preview releases with the '--dry-run' option ([3348f2c](https://github.com/ls-age/bump-version/commits/3348f2c))
 * Run for subpackages with the '--dir' option ([f1d29a9](https://github.com/ls-age/bump-version/commits/f1d29a9))
+* Support publishing with pnpm ([#47](https://github.com/ls-age/bump-version/issues/47)) ([cc16bbc](https://github.com/ls-age/bump-version/commits/cc16bbc))
 * Support releasing packages in subdirs ([7e11b5a](https://github.com/ls-age/bump-version/commits/7e11b5a))
 
 

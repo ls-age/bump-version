@@ -1,6 +1,6 @@
 {
   "name": "@ls-age/bump-version",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "description": "Automated npm and GitHub releases based on commit messages",
   "main": "out/index.js",
   "bin": {
