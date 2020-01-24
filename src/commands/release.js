@@ -189,11 +189,11 @@ export async function createRelease(options) {
   });
 
   if (!pkg.private) {
-    await publishToNpm(
-      Object.assign({}, options, {
-        tag: releaseBranch !== true && releaseBranch,
-      })
-    );
+    await publishToNpm({
+      ...options,
+      packageManager: options['package-manager'],
+      tag: releaseBranch !== true && releaseBranch,
+    });
   }
 
   return { released: true, version: bump.version };
@@ -228,6 +228,10 @@ export default new Command({
       name: 'release-files',
       description: 'Directories to add to the release. Defaults to `out`',
       array: true,
+    }),
+    new StringOption({
+      name: 'package-manager',
+      description: 'The package manager to use. Defaults to `npm`',
     }),
   ],
 });
