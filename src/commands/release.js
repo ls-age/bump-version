@@ -126,8 +126,9 @@ export async function createRelease(options) {
   await addAndCommit({
     ...options,
     dryRun,
-    files: [changelogPath],
-    message: `chore(release): Release ${bump.version} [ci skip]`,
+    message: `chore(release): Release ${options.dir ? `${pkg.name} ` : ''}${
+      bump.version
+    } [ci skip]`,
   });
 
   await skipInDryRun(dryRun, 'Skipping git push', () => push({ ...options, branch: sourceBranch }));
