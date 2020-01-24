@@ -103,7 +103,7 @@ export async function createRelease(options) {
     })
   );
 
-  if (!bump.needed) {
+  if (!options.first && !bump.needed) {
     info('No release needed: Cancelling.');
     return { released: false };
   }
