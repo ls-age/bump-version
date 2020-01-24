@@ -98,7 +98,4 @@
 
 ### Features
 
-* Implement core functionality ([#2](https://github.com/ls-age/bump-version/issues/2)) ([f0e4c6c](https://github.com/ls-age/bump-version/commits/f0e4c6c))
-
-
-
+- Implement core functionality ([#2](https://github.com/ls-age/bump-version/issues/2)) ([f0e4c6c](https://github.com/ls-age/bump-version/commits/f0e4c6c))
