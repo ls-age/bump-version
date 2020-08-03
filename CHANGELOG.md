@@ -1,5 +1,5 @@
-<a name="1.0.0-beta.4"></a>
-# 1.0.0-beta.4 (2020-03-01)
+<a name="1.0.0-beta.5"></a>
+# 1.0.0-beta.5 (2020-08-03)
 
 
 ### Bug Fixes
@@ -9,6 +9,7 @@
 * Bump version in monorepo package dir ([9731f42](https://github.com/ls-age/bump-version/commits/9731f42))
 * Do not verify release files ([2b2568d](https://github.com/ls-age/bump-version/commits/2b2568d))
 * Fix typo ([#48](https://github.com/ls-age/bump-version/issues/48)) ([d1a7b76](https://github.com/ls-age/bump-version/commits/d1a7b76))
+* Prevent git checks for pnpm ([4390bcb](https://github.com/ls-age/bump-version/commits/4390bcb))
 
 
 ### Features
