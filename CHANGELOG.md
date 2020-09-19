@@ -1,5 +1,5 @@
-<a name="1.0.0-beta.5"></a>
-# 1.0.0-beta.5 (2020-08-03)
+<a name="1.0.0-beta.6"></a>
+# 1.0.0-beta.6 (2020-09-19)
 
 
 ### Bug Fixes
@@ -7,9 +7,11 @@
 * **release:** Fix typo that prevents tag creation ([c8e215b](https://github.com/ls-age/bump-version/commits/c8e215b))
 * **release:** Skip tag creation in dry run only ([2b7a3e0](https://github.com/ls-age/bump-version/commits/2b7a3e0))
 * Bump version in monorepo package dir ([9731f42](https://github.com/ls-age/bump-version/commits/9731f42))
+* Compare correct tags ([a446c60](https://github.com/ls-age/bump-version/commits/a446c60))
 * Do not verify release files ([2b2568d](https://github.com/ls-age/bump-version/commits/2b2568d))
 * Fix typo ([#48](https://github.com/ls-age/bump-version/issues/48)) ([d1a7b76](https://github.com/ls-age/bump-version/commits/d1a7b76))
 * Prevent git checks for pnpm ([4390bcb](https://github.com/ls-age/bump-version/commits/4390bcb))
+* Prevent type error while getting tags ([48c852f](https://github.com/ls-age/bump-version/commits/48c852f))
 
 
 ### Features
