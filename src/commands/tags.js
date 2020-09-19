@@ -37,6 +37,8 @@ export async function getFilteredTags(options) {
 
       return version ? result.concat({ ...tag, version }) : result;
     }, []);
+  } else {
+    tags = tags.map(t => ({ ...t, version: t.name }));
   }
 
   return filterTags(tags, options.filter || false);
