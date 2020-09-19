@@ -8,6 +8,7 @@
   },
   "scripts": {
     "compile": "babel -d out src",
+    "dev": "npm run -s compile -- --watch",
     "format": "prettier --ignore-path .gitignore \"**/*\" \"!{.{git,npm}ignore,CHANGELOG.md}\"",
     "lint": "eslint --ignore-path .gitignore .",
     "test": "ava"
