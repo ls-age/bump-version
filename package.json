@@ -1,6 +1,6 @@
 {
   "name": "@ls-age/bump-version",
-  "version": "0.2.1",
+  "version": "1.0.0-beta.6",
   "description": "Automated npm and GitHub releases based on commit messages",
   "main": "out/index.js",
   "bin": {
@@ -8,6 +8,7 @@
   },
   "scripts": {
     "compile": "babel -d out src",
+    "dev": "npm run -s compile -- --watch",
     "format": "prettier --ignore-path .gitignore \"**/*\" \"!{.{git,npm}ignore,CHANGELOG.md}\"",
     "lint": "eslint --ignore-path .gitignore .",
     "test": "ava"
@@ -50,7 +51,7 @@
   },
   "eslintConfig": {
     "parserOptions": {
-      "ecmaVersion": 2017
+      "ecmaVersion": 2019
     },
     "extends": [
       "@ls-age",

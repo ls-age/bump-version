@@ -47,7 +47,7 @@ export function handleError(err, options) {
   if (options.verbose) {
     console.error(err); // eslint-disable-line no-console
   } else {
-    console.error(`${err.name} ${err.message.trim()}`); // eslint-disable-line no-console
+    console.error(`${err.name}: ${err.message.trim()}`); // eslint-disable-line no-console
   }
 
   process.exitCode = 1;

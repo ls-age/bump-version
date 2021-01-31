@@ -11,15 +11,55 @@ import addAndCommit from '../lib/git/commit';
 import { checkout, currentBranch } from '../lib/git/branch';
 import { createTag, filterTags } from '../lib/git/tag';
 import push from '../lib/git/push';
+import { info, error } from '../lib/log';
+import { isMonorepo, tagPrefix as monorepoPrefix } from '../lib/monorepo';
 import { onReleaseBranch } from './on-release-branch';
 import { getFilteredTags } from './tags';
 import { recommendBump } from './recommend-bump';
 import { createChangelog } from './changelog';
 
-export async function createRelease(options) {
-  if (!(await isClean(options))) {
-    throw new Error('Working directory has uncommitted changes');
+function logDryRun(...message) {
+  return info('[DRY-RUN]', ...message);
+}
+
+async function continueInDryRun(dryRun, fn) {
+  try {
+    await fn();
+  } catch (err) {
+    if (dryRun) {
+      error(`Error: ${err.message}`);
+      logDryRun(' -> This is a dry run, continue anyway...');
+    } else {
+      throw err;
+    }
   }
+}
+
+async function skipInDryRun(dryRun, message, fn) {
+  if (dryRun) {
+    return logDryRun(message);
+  }
+
+  return fn();
+}
+
+export async function createRelease(options) {
+  const dryRun = options['dry-run'];
+  const monorepo = await isMonorepo(options);
+
+  if (monorepo) {
+    info('Detected a monorepo');
+
+    if (!options.dir) {
+      throw new Error(`In a monorepo, the '--dir' option is required`);
+    }
+  }
+
+  await continueInDryRun(dryRun, async () => {
+    if (!(await isClean(options))) {
+      throw new Error('Working directory has uncommitted changes');
+    }
+  });
 
   const sourceBranch = await currentBranch(options);
   const releaseBranch = await onReleaseBranch(
@@ -29,12 +69,20 @@ export async function createRelease(options) {
   );
 
   if (!releaseBranch) {
-    return 'Not on release branch: Canceling.';
+    error('Not on release branch: Canceling.');
+
+    if (dryRun) {
+      logDryRun(' -> This is a dry run, continue anyway...');
+    } else {
+      return { released: false };
+    }
   }
 
-  if (!options['gh-token']) {
-    throw new Error('Missing GitHub API token');
-  }
+  await continueInDryRun(dryRun, () => {
+    if (!options['gh-token']) {
+      throw new Error('Missing GitHub API token');
+    }
+  });
 
   // Check npm login
   const pkg = await loadPackage(options);
@@ -55,65 +103,77 @@ export async function createRelease(options) {
     })
   );
 
-  if (!bump.needed) {
-    return 'No release needed: Canceling.';
+  if (!options.first && !bump.needed) {
+    info('No release needed: Cancelling.');
+    return { released: false };
   }
 
   if (options.first) {
     bump.version = (await loadPackage(options)).version;
+  } else if (dryRun) {
+    logDryRun('Skip bumping version to', bump.version);
   } else {
     await bumpVersion(bump.version, options);
   }
 
-  await outputFile(
-    join(options.cwd || process.cwd(), 'CHANGELOG.md'),
-    await createChangelog(
-      Object.assign(
-        {},
-        {
-          tags: nonPrereleaseTags,
-          pkg,
-        }
-      )
-    )
+  const changelogPath = join(options.cwd || process.cwd(), options.dir || '.', 'CHANGELOG.md');
+  const changelog = await createChangelog({ ...options, tags: nonPrereleaseTags, pkg });
+
+  await skipInDryRun(dryRun, `Skipping writing to file: '${changelogPath}': ${changelog}`, () =>
+    outputFile(changelogPath, changelog)
   );
 
-  await addAndCommit(
-    Object.assign({}, options, {
-      message: `chore(release): Release ${bump.version} [ci skip]`,
-    })
-  );
-  await push(
-    Object.assign({}, options, {
-      branch: sourceBranch,
-    })
-  );
+  const commitMessageVersion = `${options.dir ? `${pkg.name} ` : ''}${bump.version}`;
+
+  await addAndCommit({
+    ...options,
+    dryRun,
+    message: `chore(release): Release ${commitMessageVersion} [ci skip]`,
+  });
+
+  await skipInDryRun(dryRun, 'Skipping git push', () => push({ ...options, branch: sourceBranch }));
 
   // Create release tag
-  const tagPrefix = 'v'; // FIXME: Tag from config
-  const tagBranch = `release-${bump.version}`;
-  await checkout(Object.assign({}, options, { branch: tagBranch, create: true }));
+  const monoPrefix = monorepo ? monorepoPrefix(options) : '';
+  const tagName = `${monoPrefix}v${bump.version}`;
+  const tagBranch = `release-${monoPrefix}${bump.version}`;
+
+  await skipInDryRun(dryRun, `Checking out ${tagBranch}`, () =>
+    checkout(Object.assign({}, options, { branch: tagBranch, create: true }))
+  );
 
   if (!options['skip-release-files']) {
-    await addAndCommit(
-      Object.assign({}, options, {
-        force: true,
-        files: options['release-files'] || ['out'],
-        message: `chore(release): Add ${bump.version} release files [ci skip]`,
-      })
-    );
+    await addAndCommit({
+      ...options,
+      dryRun,
+      force: true,
+      verify: false,
+      files: options['release-files'] || [join(options.dir || '.', 'out')],
+      message: `chore(release): Add ${commitMessageVersion} release files [ci skip]`,
+    });
   }
-  await createTag({
-    prefix: tagPrefix,
-    version: bump.version,
-    message: `chore(release): Add ${bump.version} release tag [ci skip]`,
-  });
-  await push(
-    Object.assign({}, options, {
-      branch: sourceBranch,
-      tags: true,
+
+  await skipInDryRun(dryRun, `Skipping creation of tag '${tagName}'`, () =>
+    createTag({
+      dryRun,
+      name: tagName,
+      message: `chore(release): Add ${commitMessageVersion} release tag [ci skip]`,
     })
   );
+
+  await push({ ...options, dryRun, branch: sourceBranch, tags: true });
+
+  const releaseBody = await createChangelog({
+    ...options,
+    tags: nonPrereleaseTags,
+    last: true,
+    pkg,
+  });
+
+  if (dryRun) {
+    logDryRun(`Now, we would create and publish a release containing: ${releaseBody}`);
+    return { released: false, version: bump.version };
+  }
 
   const github = new GitHub({});
   github.authenticate({
@@ -121,32 +181,24 @@ export async function createRelease(options) {
     token: options['gh-token'],
   });
 
-  const releaseBody = await createChangelog(
-    Object.assign({}, options, {
-      tags: nonPrereleaseTags,
-      last: true,
-      pkg,
-    })
-  );
-
   const { user, repo } = getRepo(pkg);
   await github.repos.createRelease({
     owner: user,
     repo,
-    tag_name: `${tagPrefix}${bump.version}`,
+    tag_name: tagName,
     body: releaseBody,
     prerelease: releaseBranch !== true,
   });
 
   if (!pkg.private) {
-    await publishToNpm(
-      Object.assign({}, options, {
-        tag: releaseBranch !== true && releaseBranch,
-      })
-    );
+    await publishToNpm({
+      ...options,
+      packageManager: options['package-manager'],
+      tag: releaseBranch !== true && releaseBranch,
+    });
   }
 
-  return bump.version;
+  return { released: true, version: bump.version };
 }
 
 export default new Command({
@@ -157,6 +209,10 @@ export default new Command({
     new StringOption({
       name: 'gh-token',
       description: 'GitHub API token to use',
+    }),
+    new BooleanOption({
+      name: 'dry-run',
+      description: 'Do not upload anything',
     }),
     new BooleanOption({
       name: 'first',
@@ -174,6 +230,10 @@ export default new Command({
       name: 'release-files',
       description: 'Directories to add to the release. Defaults to `out`',
       array: true,
+    }),
+    new StringOption({
+      name: 'package-manager',
+      description: 'The package manager to use. Defaults to `npm`',
     }),
   ],
 });

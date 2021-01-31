@@ -33,12 +33,7 @@ export async function createChangelog(options) {
 
   let byVersion = await Promise.all(
     msgOptions.map(({ from, until, version, date }) =>
-      getMessages(
-        Object.assign(options, {
-          from,
-          until,
-        })
-      ).then(messages => ({ messages, version, date }))
+      getMessages({ ...options, from, until }).then(messages => ({ messages, version, date }))
     )
   );
 
