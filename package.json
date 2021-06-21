@@ -26,7 +26,7 @@
     "@ls-age/expose": "^0.3.0-beta.1",
     "bitbucket-url-to-object": "^0.3.0",
     "conventional-changelog-angular": "^1.5.2",
-    "conventional-changelog-writer": "^2.0.2",
+    "conventional-changelog-writer": "^5.0.0",
     "conventional-commits-parser": "^2.0.1",
     "conventional-recommended-bump": "^1.0.3",
     "dateformat": "^3.0.2",
